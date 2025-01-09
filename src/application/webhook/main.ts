@@ -6,7 +6,7 @@ import { AppModule } from "./app.module.js";
 
 // Handle incoming GitHub webhook messages. This is the entrypoint for
 // the webhook cloud function.
-export const handleGithubWebhookEvent: HttpFunction = async (
+const handleGithubWebhookEvent: HttpFunction = async (
   request,
   response
 ) => {
@@ -37,6 +37,8 @@ export const handleGithubWebhookEvent: HttpFunction = async (
   await app.close();
   response.status(200).send();
 };
+
+export default handleGithubWebhookEvent;
 
 export const test11 = async () => {
   const app = await NestFactory.createApplicationContext(AppModule);
