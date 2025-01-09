@@ -2,7 +2,7 @@
   "name": "publish-to-bcr",
   "private": true,
   "type": "module",
-  "main": "./application/webhook/index.js",
+  "main": "dist/publish-to-bcr/application/webhook/main.js",
   "engines": {
     "node": "^18"
   },
@@ -13,7 +13,8 @@
     "gcp-build": "",
     "test": "jest src",
     "pree2e": "pnpm run build",
-    "e2e": "jest e2e"
+    "e2e": "jest e2e",
+    "start": "node dist/publish-to-bcr/application/webhook/main.js"
   },
   "dependencies": {
     "@google-cloud/functions-framework": "^3.1.2",
