@@ -2,14 +2,14 @@
   "version": 2,
   "builds": [
     {
-      "src": "dist/publish-to-bcr/application/webhook/main.js",
+      "src": "src/application/webhook/main.ts",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "dist/publish-to-bcr/application/webhook/main.js"
+      "dest": "src/application/webhook/main.ts"
     }
   ]
 }
