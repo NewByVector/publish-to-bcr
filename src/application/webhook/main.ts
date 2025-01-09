@@ -10,6 +10,8 @@ export const handleGithubWebhookEvent: HttpFunction = async (
   request,
   response
 ) => {
+  response.status(200).json({ message: 'Hello from Vercel!' });
+  return
   const app = await NestFactory.createApplicationContext(AppModule);
 
   const webhooks = new Webhooks({ secret: process.env.GITHUB_APP_WEBHOOK_SECRET });
