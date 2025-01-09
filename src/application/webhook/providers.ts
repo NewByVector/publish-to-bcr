@@ -4,7 +4,6 @@ import { Octokit } from "@octokit/rest";
 import { EmitterWebhookEvent } from "@octokit/webhooks";
 import { Repository } from "../../domain/repository.js";
 import { GitHubClient } from "../../infrastructure/github.js";
-import { SecretsClient } from "../../infrastructure/secrets.js";
 import {
   createAppAuthorizedOctokit,
   createBotAppAuthorizedOctokit,
@@ -14,20 +13,20 @@ export const APP_OCTOKIT_PROVIDER: Provider = {
   // Provide an Octokit instance authorized for the user GitHub app,
   // which users install to their ruleset and BCR fork.
   provide: "appOctokit",
-  useFactory: (secretsClient: SecretsClient): Promise<Octokit> => {
-    return createAppAuthorizedOctokit(secretsClient);
+  useFactory: (): Promise<Octokit> => {
+    return createAppAuthorizedOctokit();
   },
-  inject: [SecretsClient],
+  inject: [],
 };
 
 export const BCR_APP_OCTOKIT_PROVIDER: Provider = {
   // Provide an Octokit instance authorized for the bcr GitHub app,
   // which is installed to the BCR repo.
   provide: "bcrAppOctokit",
-  useFactory: (secretsClient: SecretsClient): Promise<Octokit> => {
-    return createBotAppAuthorizedOctokit(secretsClient);
+  useFactory: (): Promise<Octokit> => {
+    return createBotAppAuthorizedOctokit();
   },
-  inject: [SecretsClient],
+  inject: [],
 };
 
 export const RULESET_REPO_GITHUB_CLIENT_PROVIDER: Provider = {

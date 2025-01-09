@@ -1,7 +1,6 @@
 import { HttpFunction } from "@google-cloud/functions-framework";
 import { ContextIdFactory, NestFactory } from "@nestjs/core";
 import { Webhooks } from "@octokit/webhooks";
-import { SecretsClient } from "../../infrastructure/secrets.js";
 import { ReleaseEventHandler } from "../release-event-handler.js";
 import { AppModule } from "./app.module.js";
 
@@ -13,12 +12,7 @@ export const handleGithubWebhookEvent: HttpFunction = async (
 ) => {
   const app = await NestFactory.createApplicationContext(AppModule);
 
-  const secretsClient = app.get(SecretsClient);
-  const githubWebhookSecret = await secretsClient.accessSecret(
-    "github-app-webhook-secret"
-  );
-
-  const webhooks = new Webhooks({ secret: githubWebhookSecret });
+  const webhooks = new Webhooks({ secret: process.env.GITHUB_APP_WEBHOOK_SECRET });
   webhooks.on("release.published", async (event) => {
     // Register the webhook event as the NestJS "request" so that it's available to inject.
     const contextId = ContextIdFactory.create();
@@ -41,3 +35,37 @@ export const handleGithubWebhookEvent: HttpFunction = async (
   await app.close();
   response.status(200).send();
 };
+
+export const test11 = async () => {
+  const app = await NestFactory.createApplicationContext(AppModule);
+  const event = {
+    id: '123456',
+    name: 'release',
+    payload: {
+      action: "published",
+      sender: {
+        login: 'newbyvector'
+      },
+      release: {
+        html_url: '',
+        tag_name: '20241225.0-dev'
+      },
+      repository: {
+        name: 'yacl',
+        owner: {
+          login: 'newbyvector'
+        },
+      },
+      installation: {}
+    }
+  } as any;
+  const contextId = ContextIdFactory.create();
+  app.registerRequestByContextId(event, contextId);
+
+  const releaseEventHandler = await app.resolve(
+    ReleaseEventHandler,
+    contextId
+  );
+
+  await releaseEventHandler.handle(event);
+}

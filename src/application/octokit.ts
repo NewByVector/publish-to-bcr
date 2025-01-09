@@ -1,41 +1,23 @@
 import { Octokit } from "@octokit/rest";
 import { getAppAuthorizedOctokit } from "../infrastructure/github.js";
-import { SecretsClient } from "../infrastructure/secrets.js";
 
-export async function createAppAuthorizedOctokit(
-  secretsClient: SecretsClient
-): Promise<Octokit> {
-  const [githubAppPrivateKey, githubAppClientId, githubAppClientSecret] =
-    await Promise.all([
-      secretsClient.accessSecret("github-app-private-key"),
-      secretsClient.accessSecret("github-app-client-id"),
-      secretsClient.accessSecret("github-app-client-secret"),
-    ]);
-
+export async function createAppAuthorizedOctokit(): Promise<Octokit> {
+  console.log(process.env.GITHUB_APP_ID, "aaaa");
   return getAppAuthorizedOctokit(
     Number(process.env.GITHUB_APP_ID),
-    githubAppPrivateKey,
-    githubAppClientId,
-    githubAppClientSecret
+    process.env.GITHUB_APP_PRIVATEKEY,
+    process.env.GITHUB_APP_CLIENT_ID,
+    process.env.GITHUB_APP_CLIENT_SECRET
   );
 }
 
 export async function createBotAppAuthorizedOctokit(
-  secretsClient: SecretsClient
 ): Promise<Octokit> {
-  const [
-    githubBotAppPrivateKey,
-    githubBotAppClientId,
-    githubBotAppClientSecret,
-  ] = await Promise.all([
-    secretsClient.accessSecret("github-bot-app-private-key"),
-    secretsClient.accessSecret("github-bot-app-client-id"),
-    secretsClient.accessSecret("github-bot-app-client-secret"),
-  ]);
+  console.log(process.env.GITHUB_BOT_APP_ID, "bbbb");
   return getAppAuthorizedOctokit(
     Number(process.env.GITHUB_BOT_APP_ID),
-    githubBotAppPrivateKey,
-    githubBotAppClientId,
-    githubBotAppClientSecret
+    process.env.GITHUB_BOT_APP_PRIVATEKEY,
+    process.env.GITHUB_BOT_APP_CLIENT_ID,
+    process.env.GITHUB_BOT_APP_CLIENT_SECRET
   );
 }

@@ -29,6 +29,7 @@ export function getAppAuthorizedOctokit(
   clientId: string,
   clientSecret: string
 ): Octokit {
+  console.log(appId, "xxxx");
   return new Octokit({
     authStrategy: createAppAuth,
     auth: {
